@@ -68,7 +68,12 @@ SubCoxConX <- function(formula, var_subgroup = NULL, var_cov = NULL, data, decim
   possible_rowone <- purrr::possibly(function(x){x[1, ]}, NA)
   possible_pv <- purrr::possibly(function(x){summary(x)[["coefficients"]][1, ] %>% tail(1)}, NA)
 
+  if (!is.null(var_cov)){
+    formula <- as.formula(paste0(deparse(formula), " + ", paste(var_cov, collapse = "+")))
+  }
+
   if (is.null(var_subgroup)){
+
     model <- coxph(formula, data = data)
     HR <- round(exp(coef(model)), decimal.hr)[1]
     CI <- round(exp(confint(model)[1, ]), decimal.CI)
@@ -135,6 +140,10 @@ SubCoxUniY <- function(formula, var_cov = NULL, data, decimal.hr = 3, decimal.CI
   possible_rowone <- purrr::possibly(function(x){x[1, ]}, NA)
   possible_pv <- purrr::possibly(function(x){summary(x)[["coefficients"]][1, ] %>% tail(1)}, NA)
 
+  if (!is.null(var_cov)){
+    formula <- as.formula(paste0(deparse(formula), " + ", paste(var_cov, collapse = "+")))
+  }
+
   model <- coxph(formula, data = data)
   xlev <- names(model$xlevels)
   HR <- round(exp(coef(model)), decimal.hr)
@@ -183,6 +192,9 @@ SubCoxCatX <- function(formula, var_subgroup = NULL, var_cov = NULL, data, decim
   possible_rowone <- purrr::possibly(function(x){x[1, ]}, NA)
   possible_pv <- purrr::possibly(function(x){summary(x)[["coefficients"]][1, ] %>% tail(1)}, NA)
 
+  if (!is.null(var_cov)){
+    formula <- as.formula(paste0(deparse(formula), " + ", paste(var_cov, collapse = "+")))
+  }
 
   if (is.null(var_subgroup)){
     model <- coxph(formula, data = data)
